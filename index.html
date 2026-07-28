@@ -1,337 +1,671 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<title>绯蚀 | Official Website</title>
-<meta name="description" content="绯蚀 Official Website">
+  <title>绯蚀 | Official Website</title>
+  <meta name="description" content="绯蚀 Official Website">
+  <meta name="theme-color" content="#12060b">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
 
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="ai-chat-redesign.css">
-<link rel="icon" href="assets/logo/favicon.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="assets/logo/favicon.png">
 </head>
 
 <body>
 
-<!-- Loading -->
-<div id="loading">
-    <div class="loading-content">
-        <h1>绯蚀</h1>
-        <p>OFFICIAL WEBSITE</p>
-        <button id="enter" type="button">ENTER</button>
+  <!-- Loading Screen -->
+  <div id="loading" class="loading-screen" aria-hidden="false">
+    <div class="loading-inner">
+      <div class="loading-mark">绯蚀</div>
+      <p class="loading-subtitle">OFFICIAL WEBSITE</p>
+      <button id="enter" class="loading-enter" type="button">
+        ENTER
+      </button>
     </div>
-</div>
+  </div>
 
-<!-- Background -->
-<canvas id="particles"></canvas>
-<div class="bg"></div>
+  <!-- Background -->
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="site-bg" aria-hidden="true"></div>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true">
+    <span id="scrollProgressBar"></span>
+  </div>
 
-<!-- Header -->
-<header>
-    <div class="logo">绯蚀</div>
+  <!-- Header -->
+  <header class="site-header">
 
-    <nav>
-        <a href="#home">首页</a>
-        <a href="#about">关于</a>
-        <a href="#live">直播</a>
-        <a href="#merch">周边</a>
-        <a href="#gallery">Gallery</a>
-        <a href="#ai">AI Chat</a>
+    <a class="site-logo" href="#home" aria-label="返回首页">
+      <span class="site-logo-cn">绯蚀</span>
+      <span class="site-logo-en">FEISHI</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="主导航">
+      <a href="#home">首页</a>
+      <a href="#about">关于</a>
+      <a href="#live">直播</a>
+      <a href="#merch">周边</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#ai">AI Chat</a>
     </nav>
-</header>
 
-<main>
+    <button
+      id="menuToggle"
+      class="menu-toggle"
+      type="button"
+      aria-label="打开菜单"
+      aria-expanded="false"
+      aria-controls="mobileMenu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
 
-<!-- Home -->
-<section id="home">
+  </header>
 
-    <div class="left fade-up">
-        <div class="small">VTUBER · OFFICIAL</div>
+  <!-- Mobile Menu -->
+  <aside id="mobileMenu" class="mobile-menu" aria-hidden="true">
+    <div class="mobile-menu-panel">
 
-        <h1>绯蚀</h1>
-        <h2>FEISHI</h2>
+      <div class="mobile-menu-head">
+        <span>MENU</span>
+        <button
+          id="menuClose"
+          class="menu-close"
+          type="button"
+          aria-label="关闭菜单">
+          ×
+        </button>
+      </div>
 
-        <p class="quote">
-            「一定要理想型吗 <br>
-            我不行吗」
-        </p>
+      <nav class="mobile-nav" aria-label="手机导航">
+        <a href="#home"><span>01</span>首页</a>
+        <a href="#about"><span>02</span>关于</a>
+        <a href="#live"><span>03</span>直播</a>
+        <a href="#merch"><span>04</span>周边</a>
+        <a href="#gallery"><span>05</span>Gallery</a>
+        <a href="#ai"><span>06</span>AI Chat</a>
+      </nav>
 
-        <div class="buttons">
-            <a href="#live">查看直播</a>
-            <a href="#about">了解更多</a>
-        </div>
+      <div class="mobile-menu-footer">
+        <p>DOUYIN</p>
+        <a
+          href="https://v.douyin.com/SXDbnmox4Jo/"
+          target="_blank"
+          rel="noopener noreferrer">
+          87328734252
+        </a>
+      </div>
+
     </div>
+  </aside>
 
-    <div class="right fade-up">
-        <img
+  <main>
+
+    <!-- Hero -->
+    <section id="home" class="hero-section">
+
+      <div class="hero-copy reveal">
+
+        <p class="eyebrow">VTUBER · OFFICIAL</p>
+
+        <h1 class="hero-title">
+          <span class="hero-title-cn">绯蚀</span>
+          <span class="hero-title-en">FEISHI</span>
+        </h1>
+
+        <blockquote class="hero-quote">
+          「一定要理想型吗？<br>
+          我不行吗。」
+        </blockquote>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#live">
+            查看直播
+          </a>
+
+          <a
+            class="btn btn-ghost"
+            href="https://v.douyin.com/SXDbnmox4Jo/"
+            target="_blank"
+            rel="noopener noreferrer">
+            官方抖音
+          </a>
+        </div>
+
+        <div class="hero-meta">
+          <span>杂谈主播</span>
+          <span>🎸⁰⁶¹⁹</span>
+        </div>
+
+      </div>
+
+      <div class="hero-visual reveal">
+
+        <div class="hero-aura" aria-hidden="true"></div>
+
+        <picture>
+          <source
+            media="(max-width: 768px)"
+            srcset="assets/character/feishi.png">
+
+          <img
             id="character"
+            class="hero-character"
             src="assets/character/feishi.png"
             alt="绯蚀立绘">
-    </div>
+        </picture>
 
-</section>
-
-<!-- About -->
-<section id="about">
-
-    <div class="title">ABOUT</div>
-    <h2>关于绯蚀</h2>
-
-    <div class="about-wrapper">
-
-        <div class="about-left">
-
-            <div class="info-card glass hover-lift">
-
-                <h3>人物介绍</h3>
-
-                <p>
-                    杂谈主播，喜欢聊天、分享生活和陪伴大家<br>
-                    欢迎来到绯蚀的世界
-                </p>
-
-                <div class="official-link">
-
-                    <div class="douyin-info">
-                        <h4>🎵 官方抖音</h4>
-                        <p>抖音号：87328734252</p>
-                    </div>
-
-                    <a
-                        class="douyin-btn"
-                        href="https://v.douyin.com/SXDbnmox4Jo/"
-                        target="_blank"
-                        rel="noopener noreferrer">
-                        前往主页 →
-                    </a>
-
-                </div>
-
-            </div>
-
-            <div class="info-card glass hover-lift">
-
-                <h3>基本信息</h3>
-
-                <div class="profile-list">
-
-                    <div class="profile-item">
-                        <span>直播类型</span>
-                        <span>杂谈</span>
-                    </div>
-
-                    <div class="profile-item">
-                        <span>直播时间</span>
-                        <span>06:00–09:00</span>
-                    </div>
-
-                    <div class="profile-item">
-                        <span>直播时间</span>
-                        <span>14:00–17:00</span>
-                    </div>
-
-                    <div class="profile-item">
-                        <span>单推符号</span>
-                        <span>🎸⁰⁶¹⁹</span>
-                    </div>
-
-                </div>
-
-            </div>
-
+        <div class="hero-visual-label">
+          <span>FEISHI</span>
+          <small>OFFICIAL VISUAL</small>
         </div>
 
-        <div class="about-right fade-up">
+      </div>
+
+      <a class="scroll-hint" href="#about" aria-label="向下浏览">
+        <span>SCROLL</span>
+        <i></i>
+      </a>
+
+    </section>
+
+    <!-- About -->
+    <section id="about" class="section about-section">
+
+      <div class="section-heading reveal">
+        <p class="section-kicker">ABOUT</p>
+        <h2>关于绯蚀</h2>
+        <p class="section-intro">
+          欢迎来到绯蚀的世界。
+        </p>
+      </div>
+
+      <div class="about-layout">
+
+        <div class="about-visual reveal">
+
+          <div class="about-visual-frame">
             <img
-                src="assets/character/about.png"
-                alt="绯蚀人物图">
+              src="assets/character/about.png"
+              alt="绯蚀人物图">
+          </div>
+
+          <div class="about-signature">
+            <strong>绯蚀</strong>
+            <span>FEISHI</span>
+          </div>
+
         </div>
 
-    </div>
+        <div class="about-content">
 
-</section>
+          <article class="about-card glass-card reveal">
+            <p class="card-label">PROFILE</p>
+            <h3>人物介绍</h3>
 
-<!-- Live -->
-<section id="live">
-
-    <div class="title">LIVE</div>
-    <h2>直播时间</h2>
-
-    <div class="live-wrapper">
-
-        <div class="live-card hover-lift">
-            <h3>MORNING</h3>
-            <div class="time">06:00–09:00</div>
-            <p>Morning Stream</p>
-        </div>
-
-        <div class="live-card hover-lift">
-            <h3>AFTERNOON</h3>
-            <div class="time">14:00–17:00</div>
-            <p>Afternoon Stream</p>
-        </div>
-
-    </div>
-
-    <div id="liveStatus">Checking...</div>
-
-    <p style="margin-top:20px;">
-        距离下一场直播：
-        <strong id="countdown">--:--:--</strong>
-    </p>
-
-</section>
-
-<!-- Merch -->
-<section id="merch">
-
-    <div class="title">MERCH</div>
-    <h2>官方周边</h2>
-
-    <div class="grid">
-
-        <div class="merch-card">
-            <img src="assets/merch/badge.webp" alt="徽章">
-            <div class="merch-info">
-                <h4>徽章</h4>
-                <span>Badge</span>
-            </div>
-        </div>
-
-        <div class="merch-card">
-            <img src="assets/merch/acrylic-stand.webp" alt="亚克力立牌">
-            <div class="merch-info">
-                <h4>亚克力立牌</h4>
-                <span>Acrylic Stand</span>
-            </div>
-        </div>
-
-        <div class="merch-card">
-            <img src="assets/merch/postcard.webp" alt="拍立得">
-            <div class="merch-info">
-                <h4>拍立得</h4>
-                <span>Polaroid</span>
-            </div>
-        </div>
-
-    </div>
-
-</section>
-
-<!-- Gallery -->
-<section id="gallery">
-
-    <div class="title">GALLERY</div>
-    <h2>作品展示</h2>
-
-    <div class="gallery">
-
-        <div class="gallery-item">
-            <img src="assets/gallery/1.jpg" alt="Gallery 01">
-            <div class="caption">Gallery 01</div>
-        </div>
-
-        <div class="gallery-item">
-            <img src="assets/gallery/2.jpg" alt="Gallery 02">
-            <div class="caption">Gallery 02</div>
-        </div>
-
-        <div class="gallery-item">
-            <img src="assets/gallery/3.jpg" alt="Gallery 03">
-            <div class="caption">Gallery 03</div>
-        </div>
-
-    </div>
-
-</section>
-
-<!-- AI Chat -->
-<section id="ai">
-
-    <div class="title">AI CHAT</div>
-    <h2>与绯蚀聊天</h2>
-
-    <div class="chat glass">
-
-        <div class="chat-sidebar">
-
-            <img
-                src="assets/character/avatar.png"
-                alt="绯蚀 AI 头像">
-
-            <h3>绯蚀 AI</h3>
-
-            <p>
-                Hi.<br>
-                我是绯蚀。<br><br>
-                今天想聊点什么？
+            <p class="about-text">
+              杂谈主播，喜欢聊天、分享生活和陪伴大家。
+              希望每一次见面，都能成为你一天里值得记住的片刻。
             </p>
 
-        </div>
+            <div class="douyin-card">
 
-        <div class="chat-main">
+              <div class="douyin-card-copy">
+                <span class="douyin-icon">♪</span>
 
-            <div id="messages">
-                <div class="message bot">
-                    欢迎来到绯蚀 Official Website.
+                <div>
+                  <strong>官方抖音</strong>
+                  <p>抖音号：87328734252</p>
                 </div>
-            </div>
+              </div>
 
-            <div class="input">
-
-                <input
-                    id="prompt"
-                    type="text"
-                    placeholder="输入消息..."
-                    autocomplete="off">
-
-                <button id="send" type="button">
-                    发送
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-</main>
-
-<!-- Footer -->
-<footer>
-
-    <div>
-        <h2>绯蚀</h2>
-        <p>© 2026 FEISHI Official Website</p>
-    </div>
-
-    <div>
-        <p>
-            抖音：
-            <a
+              <a
+                class="douyin-link"
                 href="https://v.douyin.com/SXDbnmox4Jo/"
                 target="_blank"
                 rel="noopener noreferrer">
-                前往绯蚀官方抖音
-            </a>
+                前往主页 →
+              </a>
+
+            </div>
+          </article>
+
+          <article class="about-card glass-card reveal">
+            <p class="card-label">INFORMATION</p>
+            <h3>基本信息</h3>
+
+            <dl class="profile-list">
+
+              <div class="profile-row">
+                <dt>直播类型</dt>
+                <dd>杂谈</dd>
+              </div>
+
+              <div class="profile-row">
+                <dt>早间直播</dt>
+                <dd>06:00–09:00</dd>
+              </div>
+
+              <div class="profile-row">
+                <dt>下午直播</dt>
+                <dd>14:00–17:00</dd>
+              </div>
+
+              <div class="profile-row">
+                <dt>单推符号</dt>
+                <dd>🎸⁰⁶¹⁹</dd>
+              </div>
+
+            </dl>
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Live -->
+    <section id="live" class="section live-section">
+
+      <div class="section-heading reveal">
+        <p class="section-kicker">LIVE</p>
+        <h2>直播日程</h2>
+        <p class="section-intro">
+          记得在直播时间来找我。
         </p>
+      </div>
+
+      <div class="live-dashboard">
+
+        <article class="live-status-card glass-card reveal">
+
+          <div class="live-status-top">
+            <div>
+              <p class="card-label">CURRENT STATUS</p>
+              <h3>当前状态</h3>
+            </div>
+
+            <div id="liveStatus" class="live-badge">
+              CHECKING
+            </div>
+          </div>
+
+          <div class="countdown-block">
+            <span>距离下一场直播</span>
+            <strong id="countdown">--:--:--</strong>
+          </div>
+
+          <a
+            class="live-douyin-link"
+            href="https://v.douyin.com/SXDbnmox4Jo/"
+            target="_blank"
+            rel="noopener noreferrer">
+            前往抖音直播间
+          </a>
+
+        </article>
+
+        <div class="schedule-list">
+
+          <article class="schedule-card glass-card reveal">
+            <div class="schedule-number">01</div>
+
+            <div class="schedule-copy">
+              <p>MORNING STREAM</p>
+              <h3>06:00–09:00</h3>
+              <span>早间陪伴 · Morning Talk</span>
+            </div>
+
+            <div class="schedule-line" aria-hidden="true">
+              <i></i>
+            </div>
+          </article>
+
+          <article class="schedule-card glass-card reveal">
+            <div class="schedule-number">02</div>
+
+            <div class="schedule-copy">
+              <p>AFTERNOON STREAM</p>
+              <h3>14:00–17:00</h3>
+              <span>下午杂谈 · Afternoon Talk</span>
+            </div>
+
+            <div class="schedule-line" aria-hidden="true">
+              <i></i>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Merch -->
+    <section id="merch" class="section merch-section">
+
+      <div class="section-heading reveal">
+        <p class="section-kicker">MERCH</p>
+        <h2>官方周边</h2>
+        <p class="section-intro">
+          收藏属于绯蚀的特别纪念。
+        </p>
+      </div>
+
+      <div class="merch-grid">
+
+        <article class="product-card reveal">
+          <div class="product-image">
+            <img
+              src="assets/merch/badge.webp"
+              alt="绯蚀徽章">
+          </div>
+
+          <div class="product-info">
+            <p class="product-type">BADGE</p>
+            <h3>徽章</h3>
+            <span>Official Merchandise</span>
+            <button type="button" class="product-btn">
+              查看详情
+            </button>
+          </div>
+        </article>
+
+        <article class="product-card reveal">
+          <div class="product-image">
+            <img
+              src="assets/merch/acrylic-stand.webp"
+              alt="绯蚀亚克力立牌">
+          </div>
+
+          <div class="product-info">
+            <p class="product-type">ACRYLIC STAND</p>
+            <h3>亚克力立牌</h3>
+            <span>Official Merchandise</span>
+            <button type="button" class="product-btn">
+              查看详情
+            </button>
+          </div>
+        </article>
+
+        <article class="product-card reveal">
+          <div class="product-image">
+            <img
+              src="assets/merch/postcard.webp"
+              alt="绯蚀拍立得">
+          </div>
+
+          <div class="product-info">
+            <p class="product-type">POLAROID</p>
+            <h3>拍立得</h3>
+            <span>Official Merchandise</span>
+            <button type="button" class="product-btn">
+              查看详情
+            </button>
+          </div>
+        </article>
+
+      </div>
+
+    </section>
+
+    <!-- Gallery -->
+    <section id="gallery" class="section gallery-section">
+
+      <div class="section-heading reveal">
+        <p class="section-kicker">GALLERY</p>
+        <h2>作品展示</h2>
+        <p class="section-intro">
+          记录每一个属于绯蚀的瞬间。
+        </p>
+      </div>
+
+      <div class="gallery-grid">
+
+        <figure class="gallery-card gallery-card-large reveal">
+          <button
+            class="gallery-open"
+            type="button"
+            aria-label="查看 Gallery 01">
+            <img
+              src="assets/gallery/1.jpg"
+              alt="Gallery 01">
+          </button>
+          <figcaption>
+            <span>01</span>
+            <strong>Official Visual</strong>
+          </figcaption>
+        </figure>
+
+        <figure class="gallery-card reveal">
+          <button
+            class="gallery-open"
+            type="button"
+            aria-label="查看 Gallery 02">
+            <img
+              src="assets/gallery/2.jpg"
+              alt="Gallery 02">
+          </button>
+          <figcaption>
+            <span>02</span>
+            <strong>Special Artwork</strong>
+          </figcaption>
+        </figure>
+
+        <figure class="gallery-card reveal">
+          <button
+            class="gallery-open"
+            type="button"
+            aria-label="查看 Gallery 03">
+            <img
+              src="assets/gallery/3.jpg"
+              alt="Gallery 03">
+          </button>
+          <figcaption>
+            <span>03</span>
+            <strong>Live Moment</strong>
+          </figcaption>
+        </figure>
+
+      </div>
+
+    </section>
+
+    <!-- AI Chat -->
+    <section id="ai" class="section ai-section">
+
+      <div class="section-heading reveal">
+        <p class="section-kicker">AI CHAT</p>
+        <h2>与绯蚀聊天</h2>
+        <p class="section-intro">
+          今天想聊点什么？
+        </p>
+      </div>
+
+      <div class="ai-app reveal">
+
+        <aside class="ai-sidebar">
+
+          <div class="ai-profile">
+            <div class="ai-avatar-wrap">
+              <img
+                src="assets/character/avatar.png"
+                alt="绯蚀 AI 头像">
+              <span class="ai-online-dot"></span>
+            </div>
+
+            <div>
+              <h3>绯蚀 AI</h3>
+              <p>ONLINE</p>
+            </div>
+          </div>
+
+          <div class="ai-intro">
+            <p>
+              Hi.<br>
+              我是绯蚀。
+            </p>
+
+            <span>
+              今天也可以在这里陪你聊一会儿。
+            </span>
+          </div>
+
+          <button id="clearChat" class="ai-clear" type="button">
+            清空聊天记录
+          </button>
+
+        </aside>
+
+        <div class="ai-main">
+
+          <div id="messages" class="ai-messages" aria-live="polite">
+
+            <div class="message-row bot">
+              <img
+                class="message-avatar"
+                src="assets/character/avatar.png"
+                alt="">
+
+              <div class="message-bubble">
+                欢迎来到绯蚀 Official Website。
+              </div>
+            </div>
+
+          </div>
+
+          <div class="ai-quick-list" aria-label="快捷问题">
+
+            <button
+              class="quick-reply"
+              type="button"
+              data-message="介绍一下自己">
+              介绍一下自己
+            </button>
+
+            <button
+              class="quick-reply"
+              type="button"
+              data-message="直播时间">
+              直播时间
+            </button>
+
+            <button
+              class="quick-reply"
+              type="button"
+              data-message="官方抖音">
+              官方抖音
+            </button>
+
+            <button
+              class="quick-reply"
+              type="button"
+              data-message="今天有点累">
+              今天有点累
+            </button>
+
+          </div>
+
+          <div class="ai-input-area">
+
+            <label class="sr-only" for="prompt">
+              输入消息
+            </label>
+
+            <input
+              id="prompt"
+              type="text"
+              placeholder="输入消息..."
+              autocomplete="off">
+
+            <button id="send" type="button">
+              <span>发送</span>
+              <i>→</i>
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+
+    <div class="footer-brand">
+      <strong>绯蚀</strong>
+      <span>FEISHI OFFICIAL WEBSITE</span>
     </div>
 
-</footer>
+    <div class="footer-links">
+      <a
+        href="https://v.douyin.com/SXDbnmox4Jo/"
+        target="_blank"
+        rel="noopener noreferrer">
+        DOUYIN
+      </a>
 
-<!-- Lightbox -->
-<div id="lightbox">
-    <img src="" alt="放大图片">
-</div>
+      <a href="#home">
+        BACK TO TOP
+      </a>
+    </div>
 
-<script src="script.js"></script>
+    <p class="footer-copy">
+      © 2026 FEISHI. All Rights Reserved.
+    </p>
+
+  </footer>
+
+  <!-- Gallery Lightbox -->
+  <div
+    id="lightbox"
+    class="lightbox"
+    aria-hidden="true">
+
+    <button
+      id="lightboxClose"
+      class="lightbox-close"
+      type="button"
+      aria-label="关闭图片">
+      ×
+    </button>
+
+    <button
+      id="lightboxPrev"
+      class="lightbox-nav lightbox-prev"
+      type="button"
+      aria-label="上一张">
+      ‹
+    </button>
+
+    <img id="lightboxImage" src="" alt="">
+
+    <button
+      id="lightboxNext"
+      class="lightbox-nav lightbox-next"
+      type="button"
+      aria-label="下一张">
+      ›
+    </button>
+
+    <p id="lightboxCaption" class="lightbox-caption"></p>
+
+  </div>
+
+  <script src="script.js"></script>
 
 </body>
 </html>
