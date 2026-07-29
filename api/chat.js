@@ -10,11 +10,11 @@
  *   OPENAI_MODEL=gpt-5-mini（可选）
  */
 
-const MODEL = process.env.OPENAI_MODEL || "gpt-5-mini";
+const MODEL = process.env.OPENAI_MODEL || "gpt-4.1-mini";
 
 const MAX_MESSAGES = 16;
 const MAX_MESSAGE_LENGTH = 1400;
-const MAX_OUTPUT_TOKENS = 220;
+const MAX_OUTPUT_TOKENS = 500;
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 20;
@@ -198,17 +198,29 @@ function extractText(data) {
   const parts = [];
 
   for (const item of data?.output || []) {
+    if (typeof item?.text === "string") {
+      parts.push(item.text);
+    }
+
     for (const content of item?.content || []) {
       if (
-        content?.type === "output_text" &&
+        ["output_text", "text"].includes(content?.type) &&
         typeof content.text === "string"
       ) {
         parts.push(content.text);
       }
+
+      if (
+        content?.type === "refusal" &&
+        typeof content.refusal === "string"
+      ) {
+        parts.push(content.refusal);
+      }
     }
   }
 
-  return parts.join("\n").trim();
+  return parts.join("
+").trim();
 }
 
 function postProcessReply(text) {
@@ -340,8 +352,16 @@ export default async function handler(req, res) {
     const reply = postProcessReply(extractText(data));
 
     if (!reply) {
+      console.error("OpenAI returned no readable text:", {
+        status: data?.status,
+        incomplete_details: data?.incomplete_details,
+        output_types: Array.isArray(data?.output)
+          ? data.output.map(item => item?.type)
+          : []
+      });
+
       return res.status(502).json({
-        error: "我刚刚走神了，再说一次。"
+        error: "刚刚回复没生成出来，再发一次。"
       });
     }
 
