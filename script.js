@@ -334,8 +334,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (liveDescription) {
       liveDescription.textContent = state.isLive
-        ? "欢迎进入绯蚀的直播间。"
-        : "下一场直播即将开始，请稍候。";
+        ? "欢迎进入绯蚀的直播间"
+        : "下一场直播即将开始，请稍候";
     }
 
     document.documentElement.dataset.liveState = state.isLive
@@ -362,56 +362,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const DEFAULT_MESSAGES = [
     {
       role: "assistant",
-      text: "你好，我是绯蚀官网里的 AI 互动助手。想聊点什么？"
+      text: "嗯，来了？想说什么。"
     }
   ];
 
-  const RESPONSE_RULES = [
-    {
-      keywords: ["直播时间", "几点直播", "什么时候直播", "开播时间"],
-      response: "绯蚀每天有两个直播时段：06:00–09:00，以及 14:00–17:00。"
-    },
-    {
-      keywords: ["抖音", "账号", "douyin", "主页"],
-      response: "绯蚀的抖音号是 87328734252。"
-    },
-    {
-      keywords: ["介绍", "你是谁", "绯蚀是谁", "自我介绍"],
-      response: "我是绯蚀，一位以杂谈为主的主播。单推符号是 🎸⁰⁶¹⁹。"
-    },
-    {
-      keywords: ["单推符号", "粉丝符号", "符号"],
-      response: "绯蚀的单推符号是 🎸⁰⁶¹⁹。"
-    },
-    {
-      keywords: ["累", "疲惫", "难受", "不开心"],
-      response: "辛苦了。先休息一下也没关系，今天已经做得很好了。"
-    },
-    {
-      keywords: ["你好", "嗨", "hello", "hi"],
-      response: "你好呀，很高兴在这里见到你。"
-    },
-    {
-      keywords: ["晚安", "睡觉"],
-      response: "晚安，祝你今晚睡个好觉。"
-    },
-    {
-      keywords: ["早安", "早上好"],
-      response: "早安。希望你今天一切顺利。"
-    },
-    {
-      keywords: ["喜欢", "理想型"],
-      response: "一定要理想型吗？我不行吗。"
-    }
-  ];
-
-  const FALLBACK_RESPONSES = [
-    "我听到了。你可以继续告诉我。",
-    "这个问题很有意思。",
-    "欢迎继续和我聊天。",
-    "我会认真听你说。",
-    "官网 AI 目前是本地演示版本，之后可以接入真正的 AI API。"
-  ];
+  // 网站和 API 都部署在同一个 Vercel 项目，所以直接调用本地接口。
+  const CHAT_API_URL = "/api/chat";
 
   let chatHistory = [];
   let typingTimer = null;
@@ -594,22 +550,44 @@ document.addEventListener("DOMContentLoaded", () => {
     return row;
   }
 
-  function findResponse(message) {
-    const lower = message.toLowerCase();
+  async function requestOpenAIResponse() {
+    const messages = chatHistory
+      .slice(-16)
+      .map(item => ({
+        role: item.role,
+        content: item.text
+      }));
 
-    const matchedRule = RESPONSE_RULES.find(rule =>
-      rule.keywords.some(keyword =>
-        lower.includes(keyword.toLowerCase())
-      )
-    );
+    const response = await fetch(CHAT_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ messages })
+    });
 
-    if (matchedRule) {
-      return matchedRule.response;
+    let data = {};
+
+    try {
+      data = await response.json();
+    } catch {
+      // 保留空对象，让下面统一处理错误。
     }
 
-    return FALLBACK_RESPONSES[
-      Math.floor(Math.random() * FALLBACK_RESPONSES.length)
-    ];
+    if (!response.ok) {
+      throw new Error(
+        data.error ||
+        `请求失败：${response.status}`
+      );
+    }
+
+    const reply = normalizeText(data.reply || "");
+
+    if (!reply) {
+      throw new Error("AI 返回了空内容。");
+    }
+
+    return reply;
   }
 
   function typeText(element, text, speed = 28) {
@@ -664,25 +642,32 @@ document.addEventListener("DOMContentLoaded", () => {
     setChatControlsDisabled(true);
 
     const typingIndicator = addTypingIndicator();
-    const response = findResponse(text);
 
-    await new Promise(resolve =>
-      window.setTimeout(resolve, 450 + Math.random() * 450)
-    );
+    try {
+      const response = await requestOpenAIResponse();
 
-    typingIndicator?.remove();
+      typingIndicator?.remove();
 
-    const created = addMessage("assistant", response, {
-      animate: true
-    });
+      const created = addMessage("assistant", response, {
+        animate: true
+      });
 
-    if (created?.bubble) {
-      await typeText(created.bubble, response);
+      if (created?.bubble) {
+        await typeText(created.bubble, response, 22);
+      }
+    } catch (error) {
+      console.error("绯蚀 AI 请求失败：", error);
+      typingIndicator?.remove();
+
+      addMessage(
+        "assistant",
+        error?.message || "现在连不上，等会儿再来。"
+      );
+    } finally {
+      isTyping = false;
+      setChatControlsDisabled(false);
+      chatInput?.focus();
     }
-
-    isTyping = false;
-    setChatControlsDisabled(false);
-    chatInput?.focus();
   }
 
   function clearChatHistory() {
@@ -798,7 +783,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.head.appendChild(runtimeStyle);
   }
 
-  console.info("FEISHI V2 script Part 2 loaded.");
+  console.info("FEISHI V2 OpenAI chat frontend loaded.");
 });
 
 /*
