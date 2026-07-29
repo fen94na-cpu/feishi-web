@@ -362,12 +362,48 @@ document.addEventListener("DOMContentLoaded", () => {
   const DEFAULT_MESSAGES = [
     {
       role: "assistant",
-      text: "嗯，来了？想说什么。"
+      text: "你好，我是绯蚀。想聊点什么？"
     }
   ];
 
   // 网站和 API 都部署在同一个 Vercel 项目，所以直接调用本地接口。
   const CHAT_API_URL = "/api/chat";
+
+  // 固定问题继续使用本地自动回复；其他内容再交给 OpenAI。
+  const AUTO_REPLY_RULES = [
+    {
+      keywords: ["介绍一下自己", "介绍自己", "你是谁", "自我介绍"],
+      reply: "我是绯蚀，一位以杂谈为主的主播。单推符号是 🎸⁰⁶¹⁹。"
+    },
+    {
+      keywords: ["直播时间", "几点直播", "什么时候直播", "开播时间"],
+      reply: "绯蚀每天有两个直播时段：06:00–09:00，以及 14:00–17:00。"
+    },
+    {
+      keywords: ["官方抖音", "抖音号", "抖音", "douyin"],
+      reply: "绯蚀的抖音号是 87328734252。"
+    },
+    {
+      keywords: ["单推符号", "粉丝符号"],
+      reply: "绯蚀的单推符号是 🎸⁰⁶¹⁹。"
+    },
+    {
+      keywords: ["0619"],
+      reply: "被你发现了。"
+    }
+  ];
+
+  function getAutoReply(text) {
+    const normalized = text.toLowerCase();
+
+    const matched = AUTO_REPLY_RULES.find(rule =>
+      rule.keywords.some(keyword =>
+        normalized.includes(keyword.toLowerCase())
+      )
+    );
+
+    return matched?.reply || null;
+  }
 
   let chatHistory = [];
   let typingTimer = null;
@@ -644,7 +680,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const typingIndicator = addTypingIndicator();
 
     try {
-      const response = await requestOpenAIResponse();
+      const autoReply = getAutoReply(text);
+
+      let response;
+
+      if (autoReply) {
+        await new Promise(resolve =>
+          window.setTimeout(resolve, 350)
+        );
+        response = autoReply;
+      } else {
+        response = await requestOpenAIResponse();
+      }
 
       typingIndicator?.remove();
 
@@ -783,7 +830,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.head.appendChild(runtimeStyle);
   }
 
-  console.info("FEISHI V2 OpenAI chat frontend loaded.");
+  console.info("FEISHI V2 hybrid auto-reply + OpenAI chat loaded.");
 });
 
 /*
